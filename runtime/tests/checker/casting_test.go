@@ -4229,6 +4229,17 @@ func TestCheckCastAuthorizedStructReferenceType(t *testing.T) {
 						),
 					)
 
+					if _, ok := ty.(*sema.AnyType); ok {
+						if _, ok = otherType.(*sema.AnyStructType); ok {
+
+							errs := ExpectCheckerErrors(t, err, 1)
+
+							assert.IsType(t, &sema.TypeMismatchError{}, errs[0])
+
+							return
+						}
+					}
+
 					require.NoError(t, err)
 				})
 
@@ -5641,6 +5652,17 @@ func TestCheckCastUnauthorizedStructReferenceType(t *testing.T) {
 								otherType,
 							),
 						)
+
+						if _, ok := ty.(*sema.AnyType); ok {
+							if _, ok = otherType.(*sema.AnyStructType); ok {
+
+								errs := ExpectCheckerErrors(t, err, 1)
+
+								assert.IsType(t, &sema.TypeMismatchError{}, errs[0])
+
+								return
+							}
+						}
 
 						require.NoError(t, err)
 					})
